@@ -1,5 +1,6 @@
 package flow.extensionblocker.domain;
 
+import flow.extensionblocker.common.annotation.ValidExtension;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -8,8 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -34,10 +33,7 @@ public class Blocker {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Pattern(
-      regexp = "^[a-zA-Z0-9]{1,10}$",
-      message = "확장자는 1자 이상 10자 이하의 영문 대소문자와 숫자로만 구성되어야 합니다."
-  )
+  @ValidExtension
   @Column(nullable = false, updatable = false, length = 10, unique = true)
   private String extension;
 
