@@ -1,0 +1,7 @@
+### 확장자 차단기 단 건 등록
+POST localhost:8080/blocker
+Content-Type: application/json
+
+{
+  "extension": "exe"
+}
