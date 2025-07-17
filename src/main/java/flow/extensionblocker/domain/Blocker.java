@@ -34,7 +34,6 @@ public class Blocker {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @NotBlank(message = "확장자는 필수 입력값입니다.")
   @Pattern(
       regexp = "^[a-zA-Z0-9]{1,10}$",
       message = "확장자는 1자 이상 10자 이하의 영문 대소문자와 숫자로만 구성되어야 합니다."
