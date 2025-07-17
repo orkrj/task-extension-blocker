@@ -1,0 +1,25 @@
+package flow.extensionblocker.presentation.controller;
+
+import flow.extensionblocker.application.BlockerService;
+import flow.extensionblocker.application.dto.CreateBlockerRequest;
+import flow.extensionblocker.application.dto.CreateBlockerResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController // TODO controller 로 변경
+@RequiredArgsConstructor
+@RequestMapping("/blocker")
+public class BlockerController {
+
+  private final BlockerService blockerService;
+
+  @PostMapping
+  public ResponseEntity<CreateBlockerResponse> createBlocker(@RequestBody CreateBlockerRequest request) {
+    return ResponseEntity.ok(blockerService.createBlocker(request));
+  }
+}
