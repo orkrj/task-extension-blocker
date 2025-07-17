@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
 
+import flow.extensionblocker.application.dto.CreateBlockerRequest;
 import flow.extensionblocker.domain.BlockerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -37,7 +38,7 @@ class BlockerServiceTest {
     @DisplayName("하나의 확장자에 대한 차단기를 생성한다")
     void test1() {
       // Given
-      String input = "exe";
+      CreateBlockerRequest input = new CreateBlockerRequest("exe");
 
       // When
       var response = sut.createBlocker(input);
@@ -50,7 +51,7 @@ class BlockerServiceTest {
     @DisplayName("입력값이 대문자로 주어진 경우에도 소문자로 변환하여 차단기를 생성한다")
     void test2() {
       // Given
-      String input = "EXE";
+      CreateBlockerRequest input = new CreateBlockerRequest("EXE");
 
       // When
       var response = sut.createBlocker(input);
