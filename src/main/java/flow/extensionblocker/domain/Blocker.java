@@ -45,4 +45,10 @@ public class Blocker {
   @CreatedDate
   @Column(nullable = false, updatable = false)
   private LocalDateTime blockedTime;
+
+  public static Blocker of(String extension) {
+    return Blocker.builder()
+        .extension(extension.toLowerCase())
+        .build();
+  }
 }
