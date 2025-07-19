@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController // TODO controller 로 변경
 @RequiredArgsConstructor
-@RequestMapping("/blocker")
+@RequestMapping("/blockers")
 public class BlockerController {
 
   private final BlockerService blockerService;
