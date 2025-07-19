@@ -36,10 +36,10 @@ class BlockerTest {
     }
 
     @Test
-    @DisplayName("10자에 대한 확장자 차단기를 생성할 수 있다")
+    @DisplayName("20자에 대한 확장자 차단기를 생성할 수 있다")
     void test_success_2() {
       // Given
-      String input = "abcdefghij";
+      String input = "abcdefghijklmopqrstu";
 
       // When
       var blocker = Blocker.of(input, Type.CUSTOM);
@@ -47,7 +47,7 @@ class BlockerTest {
 
       // Then
       assertThat(violations).isEmpty();
-      assertThat(blocker.getExtension()).isEqualTo("abcdefghij");
+      assertThat(blocker.getExtension()).isEqualTo("abcdefghijklmopqrstu");
     }
 
     @Test
@@ -63,14 +63,14 @@ class BlockerTest {
       // Then
       assertThat(violations)
           .extracting(ConstraintViolation::getMessage)
-          .containsExactly("확장자는 1자 이상 10자 이하의 영문 대소문자와 숫자로만 구성되어야 합니다.");
+          .containsExactly("확장자는 1자 이상 20자 이하의 영문 대소문자와 숫자로만 구성되어야 합니다.");
     }
 
     @Test
     @DisplayName("10자 이상의 확장자에 대한 차단기를 생성할 수 없다")
     void test_fail_2() {
       // Given
-      String input = "abcdefghijk";
+      String input = "abcdefghijklmopqrstuv";
 
       // When
       var blocker = Blocker.of(input, Type.CUSTOM);
@@ -79,7 +79,7 @@ class BlockerTest {
       // Then
       assertThat(violations)
           .extracting(ConstraintViolation::getMessage)
-          .containsExactly("확장자는 1자 이상 10자 이하의 영문 대소문자와 숫자로만 구성되어야 합니다.");
+          .containsExactly("확장자는 1자 이상 20자 이하의 영문 대소문자와 숫자로만 구성되어야 합니다.");
     }
 
     @Test
@@ -95,7 +95,7 @@ class BlockerTest {
       // Then
       assertThat(violations)
           .extracting(ConstraintViolation::getMessage)
-          .containsExactly("확장자는 1자 이상 10자 이하의 영문 대소문자와 숫자로만 구성되어야 합니다.");
+          .containsExactly("확장자는 1자 이상 20자 이하의 영문 대소문자와 숫자로만 구성되어야 합니다.");
     }
 
     @Test
@@ -111,7 +111,7 @@ class BlockerTest {
       // Then
       assertThat(violations)
           .extracting(ConstraintViolation::getMessage)
-          .containsExactly("확장자는 1자 이상 10자 이하의 영문 대소문자와 숫자로만 구성되어야 합니다.");
+          .containsExactly("확장자는 1자 이상 20자 이하의 영문 대소문자와 숫자로만 구성되어야 합니다.");
     }
   }
 }
