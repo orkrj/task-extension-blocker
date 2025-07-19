@@ -23,7 +23,7 @@ public class ExtensionBlockerFilter extends OncePerRequestFilter {
     String path = request.getServletPath();
     String method = request.getMethod();
 
-    return !"POST".equals(method) && !path.startsWith("/uploads");
+    return !"POST".equals(method) || !path.startsWith("/uploads");
   }
 
   @Override
