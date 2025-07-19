@@ -26,7 +26,9 @@ public class BlockerService {
     if (this.isOverCustomBlockerLimit()) {throw new BlockerLimitExceededException();}
 
     Optional<Blocker> blocker = this.getBlocker(request.extension());
-    blocker.ifPresent(this::checkBlockerDuplication);
+    if (blocker.isPresent()) {
+        return CreateBlockerResponse.from(this.checkBlockerDuplication(blocker.get()));
+    };
 
     Blocker savedBlocker = blockerRepository.createBlocker(CreateBlockerRequest.toBlocker(request));
     return CreateBlockerResponse.from(savedBlocker);
@@ -52,10 +54,11 @@ public class BlockerService {
     return blockerRepository.findBlocker(extension);
   }
 
-  private void checkBlockerDuplication(Blocker blocker) {
+  private Blocker checkBlockerDuplication(Blocker blocker) {
     if (blocker.isEnabled()) {throw new BlockerAlreadyExistsException();}
 
     blocker.restore();
+    return blocker;
   }
 
   private Blocker findBlocker(String extension) {

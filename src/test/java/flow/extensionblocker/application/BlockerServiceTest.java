@@ -96,7 +96,6 @@ class BlockerServiceTest {
 
       given(blockerRepository.countCustomBlockers()).willReturn(100);
       given(blockerRepository.findBlocker(any())).willReturn(Optional.of(blocker));
-      given(blockerRepository.createBlocker(any())).willReturn(blocker);
 
       CreateBlockerRequest input = new CreateBlockerRequest("exe");
 
