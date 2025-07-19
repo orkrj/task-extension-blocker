@@ -1,4 +1,4 @@
-package flow.extensionblocker.common.exception;
+package flow.extensionblocker.common.global.exception;
 
 import lombok.Getter;
 

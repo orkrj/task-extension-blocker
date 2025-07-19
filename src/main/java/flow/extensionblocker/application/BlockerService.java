@@ -3,7 +3,7 @@ package flow.extensionblocker.application;
 import flow.extensionblocker.application.dto.BlockerResponse;
 import flow.extensionblocker.application.dto.CreateBlockerRequest;
 import flow.extensionblocker.application.dto.CreateBlockerResponse;
-import flow.extensionblocker.common.exception.BlockerLimitExceededException;
+import flow.extensionblocker.common.global.exception.BlockerLimitExceededException;
 import flow.extensionblocker.domain.Blocker;
 import flow.extensionblocker.domain.BlockerRepository;
 import jakarta.transaction.Transactional;

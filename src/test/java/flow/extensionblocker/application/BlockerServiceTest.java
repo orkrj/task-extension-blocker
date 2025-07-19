@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
 
 import flow.extensionblocker.application.dto.CreateBlockerRequest;
-import flow.extensionblocker.common.exception.BlockerLimitExceededException;
+import flow.extensionblocker.common.global.exception.BlockerLimitExceededException;
 import flow.extensionblocker.domain.Blocker;
 import flow.extensionblocker.domain.BlockerRepository;
 import flow.extensionblocker.domain.Type;
