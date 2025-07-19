@@ -5,6 +5,7 @@ import flow.extensionblocker.application.dto.CreateBlockerRequest;
 import flow.extensionblocker.application.dto.CreateBlockerResponse;
 import flow.extensionblocker.domain.Blocker;
 import flow.extensionblocker.domain.BlockerRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ public class BlockerService {
 
   private final BlockerRepository blockerRepository;
 
+  @Transactional
   public CreateBlockerResponse createBlocker(CreateBlockerRequest request) {
     Blocker blocker = blockerRepository.createBlocker(CreateBlockerRequest.toBlocker(request));
     return CreateBlockerResponse.from(blocker);
@@ -31,6 +33,7 @@ public class BlockerService {
         .orElseThrow(() -> new IllegalArgumentException("임시용 예외: " + extension + " 는 없음"));
   }
 
+  @Transactional
   public void deleteBlocker(String extension) {
     Blocker blocker = this.findBlocker(extension);
     if (blocker.getDeletedAt() != null) {

@@ -3,8 +3,11 @@ POST localhost:8080/blocker
 Content-Type: application/json
 
 {
-  "extension": "jpg"
+  "extension": "exe"
 }
 
 ### 확장자 차단기 전체 조회
 GET localhost:8080/blocker
+
+### 확장자 차단기 삭제
+PATCH localhost:8080/blocker/exe
