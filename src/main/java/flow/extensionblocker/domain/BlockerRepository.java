@@ -12,4 +12,6 @@ public interface BlockerRepository {
   Optional<Blocker> findBlocker(String extension);
 
   Optional<Blocker> findBlockerNotDeleted(String extension);
+
+  int countCustomBlockers();
 }

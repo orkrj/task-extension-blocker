@@ -3,6 +3,7 @@ package flow.extensionblocker.application;
 import flow.extensionblocker.application.dto.BlockerResponse;
 import flow.extensionblocker.application.dto.CreateBlockerRequest;
 import flow.extensionblocker.application.dto.CreateBlockerResponse;
+import flow.extensionblocker.common.exception.BlockerLimitExceededException;
 import flow.extensionblocker.domain.Blocker;
 import flow.extensionblocker.domain.BlockerRepository;
 import jakarta.transaction.Transactional;
@@ -19,6 +20,8 @@ public class BlockerService {
 
   @Transactional
   public CreateBlockerResponse createBlocker(CreateBlockerRequest request) {
+    if (this.isOverCustomBlockerLimit()) {throw new BlockerLimitExceededException();}
+
     Optional<Blocker> checkedBlocker = isBlockerExists(request.extension());
     if (checkedBlocker.isPresent()) {
       return CreateBlockerResponse.from(checkedBlocker.get().restore());
@@ -55,5 +58,9 @@ public class BlockerService {
 
   public boolean isBlocked(String extension) {
     return blockerRepository.findBlockerNotDeleted(extension).isPresent();
+  }
+
+  public boolean isOverCustomBlockerLimit() {
+    return 200 - blockerRepository.countCustomBlockers() <= 0;
   }
 }
