@@ -1,11 +1,14 @@
 package flow.extensionblocker.presentation.controller;
 
 import flow.extensionblocker.application.BlockerService;
+import flow.extensionblocker.application.dto.BlockerResponse;
 import flow.extensionblocker.application.dto.CreateBlockerRequest;
 import flow.extensionblocker.application.dto.CreateBlockerResponse;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,5 +24,10 @@ public class BlockerController {
   @PostMapping
   public ResponseEntity<CreateBlockerResponse> createBlocker(@RequestBody CreateBlockerRequest request) {
     return ResponseEntity.ok(blockerService.createBlocker(request));
+  }
+
+  @GetMapping
+  public ResponseEntity<List<BlockerResponse>> getBlockers() {
+    return ResponseEntity.ok(blockerService.getBlockers());
   }
 }
