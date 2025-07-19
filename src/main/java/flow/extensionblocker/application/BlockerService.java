@@ -5,6 +5,7 @@ import flow.extensionblocker.application.dto.CreateBlockerRequest;
 import flow.extensionblocker.application.dto.CreateBlockerResponse;
 import flow.extensionblocker.domain.Blocker;
 import flow.extensionblocker.domain.BlockerRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +20,10 @@ public class BlockerService {
     return CreateBlockerResponse.from(blocker);
   }
 
-  public BlockerResponse getBlocker(String extension) {
-    Blocker blocker = this.findBlocker(extension);
-    return BlockerResponse.from(blocker);
+  public List<BlockerResponse> getBlockers(String extension) {
+    return blockerRepository.findBlockers().stream()
+        .map(BlockerResponse::from)
+        .toList();
   }
 
   private Blocker findBlocker(String extension) {
