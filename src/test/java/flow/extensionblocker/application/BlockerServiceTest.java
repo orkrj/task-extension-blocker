@@ -1,10 +1,12 @@
 package flow.extensionblocker.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
 
 import flow.extensionblocker.application.dto.CreateBlockerRequest;
+import flow.extensionblocker.common.exception.BlockerLimitExceededException;
 import flow.extensionblocker.domain.Blocker;
 import flow.extensionblocker.domain.BlockerRepository;
 import flow.extensionblocker.domain.Type;
@@ -70,7 +72,7 @@ class BlockerServiceTest {
 
     @Test
     @DisplayName("논리적으로 삭제된 차단기를 다시 생성할 수 있다.")
-    void test4() {
+    void test1() {
       // Given
       Blocker blocker = Blocker.of("exe");
       blocker.delete();
@@ -87,6 +89,37 @@ class BlockerServiceTest {
       assertThat(blocker.getDeletedAt()).isNotNull();
       assertThat(blocker.isEnabled()).isTrue();
       assertThat(response.extension()).isEqualTo("exe");
+    }
+
+    @Test
+    @DisplayName("커스텀 차단기가 199개인 경우 차단기를 생성할 수 있다")
+    void test2() {
+      // Given
+      CreateBlockerRequest input = new CreateBlockerRequest("exe");
+      Blocker blocker = Blocker.of("exe");
+
+      given(blockerRepository.countCustomBlockers()).willReturn(199);
+      given(blockerRepository.findBlocker("exe")).willReturn(Optional.empty());
+      given(blockerRepository.createBlocker(any())).willReturn(blocker);
+
+      // When
+      var response = sut.createBlocker(input);
+
+      // Then
+      assertThat(response.extension()).isEqualTo("exe");
+      assertThat(response.type()).isEqualTo(Type.CUSTOM);
+    }
+
+    @Test
+    @DisplayName("커스텀 차단기가 200개를 초과할 경우 예외가 발생한다")
+    void test3() {
+      // Given
+      given(blockerRepository.countCustomBlockers()).willReturn(200);
+
+      // When & Then
+      assertThatThrownBy(() -> sut.createBlocker(new CreateBlockerRequest("exe")))
+          .isInstanceOf(BlockerLimitExceededException.class)
+          .hasMessage("차단기 개수가 제한을 초과했습니다.");
     }
   }
 

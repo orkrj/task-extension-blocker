@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import flow.extensionblocker.domain.Blocker;
 import flow.extensionblocker.domain.Type;
 import flow.extensionblocker.infrastructure.persistence.JpaBlockerRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,39 @@ class JpaBlockerRepositoryTest {
 
   @Autowired
   private JpaBlockerRepository sut;
+
+  @Nested
+  @DisplayName("차단기 조회 테스트")
+  class FindBlocker {
+
+    @Test
+    @DisplayName("확장자에 해당하는 차단기를 조회한다")
+    void test1() {
+      // Given
+      String extension = "exe";
+      sut.save(Blocker.of(extension));
+
+      // When
+      var blocker = sut.findBlockerByExtension(extension);
+
+      // Then
+      assertTrue(blocker.isPresent());
+      assertEquals(extension, blocker.get().getExtension());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 확장자에 대한 차단기는 조회되지 않는다")
+    void test2() {
+      // Given
+      String extension = "nonexistent";
+
+      // When
+      var blocker = sut.findBlockerByExtension(extension);
+
+      // Then
+      assertFalse(blocker.isPresent());
+    }
+  }
 
   @Nested
   @DisplayName("차단기 전체 조회 테스트")
@@ -64,36 +98,4 @@ class JpaBlockerRepositoryTest {
     }
   }
 
-  @Nested
-  @DisplayName("차단기 조회 테스트")
-  class FindBlocker {
-
-    @Test
-    @DisplayName("확장자에 해당하는 차단기를 조회한다")
-    void test1() {
-      // Given
-      String extension = "exe";
-      sut.save(Blocker.of(extension));
-
-      // When
-      var blocker = sut.findBlockerByExtension(extension);
-
-      // Then
-      assertTrue(blocker.isPresent());
-      assertEquals(extension, blocker.get().getExtension());
-    }
-
-    @Test
-    @DisplayName("존재하지 않는 확장자에 대한 차단기는 조회되지 않는다")
-    void test2() {
-      // Given
-      String extension = "nonexistent";
-
-      // When
-      var blocker = sut.findBlockerByExtension(extension);
-
-      // Then
-      assertFalse(blocker.isPresent());
-    }
-  }
 }
