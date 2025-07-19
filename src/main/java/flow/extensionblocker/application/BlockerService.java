@@ -3,7 +3,10 @@ package flow.extensionblocker.application;
 import flow.extensionblocker.application.dto.BlockerResponse;
 import flow.extensionblocker.application.dto.CreateBlockerRequest;
 import flow.extensionblocker.application.dto.CreateBlockerResponse;
+import flow.extensionblocker.common.global.exception.BlockerAlreadyDeletedException;
+import flow.extensionblocker.common.global.exception.BlockerAlreadyExistsException;
 import flow.extensionblocker.common.global.exception.BlockerLimitExceededException;
+import flow.extensionblocker.common.global.exception.BlockerNotFoundException;
 import flow.extensionblocker.domain.Blocker;
 import flow.extensionblocker.domain.BlockerRepository;
 import jakarta.transaction.Transactional;
@@ -22,13 +25,11 @@ public class BlockerService {
   public CreateBlockerResponse createBlocker(CreateBlockerRequest request) {
     if (this.isOverCustomBlockerLimit()) {throw new BlockerLimitExceededException();}
 
-    Optional<Blocker> checkedBlocker = isBlockerExists(request.extension());
-    if (checkedBlocker.isPresent()) {
-      return CreateBlockerResponse.from(checkedBlocker.get().restore());
-    }
+    Optional<Blocker> blocker = this.getBlocker(request.extension());
+    blocker.ifPresent(this::checkBlockerDuplication);
 
-    Blocker blocker = blockerRepository.createBlocker(CreateBlockerRequest.toBlocker(request));
-    return CreateBlockerResponse.from(blocker);
+    Blocker savedBlocker = blockerRepository.createBlocker(CreateBlockerRequest.toBlocker(request));
+    return CreateBlockerResponse.from(savedBlocker);
   }
 
   public List<BlockerResponse> getBlockers() {
@@ -41,19 +42,24 @@ public class BlockerService {
   public void deleteBlocker(String extension) {
     Blocker blocker = this.findBlocker(extension);
     if (!blocker.isEnabled() && blocker.getDeletedAt() != null) {
-      throw new IllegalArgumentException(extension + " 는 이미 삭제됨");
+      throw new BlockerAlreadyDeletedException();
     }
 
     blocker.delete();
   }
 
-  private Optional<Blocker> isBlockerExists(String extension) {
+  private Optional<Blocker> getBlocker(String extension) {
     return blockerRepository.findBlocker(extension);
   }
 
+  private void checkBlockerDuplication(Blocker blocker) {
+    if (blocker.isEnabled()) {throw new BlockerAlreadyExistsException();}
+
+    blocker.restore();
+  }
+
   private Blocker findBlocker(String extension) {
-    return blockerRepository.findBlocker(extension)
-        .orElseThrow(() -> new IllegalArgumentException(extension + " 가 없음"));
+    return blockerRepository.findBlocker(extension).orElseThrow(BlockerNotFoundException::new);
   }
 
   public boolean isBlocked(String extension) {
