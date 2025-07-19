@@ -1,4 +1,4 @@
-package flow.extensionblocker.infrastructure;
+package flow.extensionblocker.infrastructure.persistence;
 
 import flow.extensionblocker.domain.Blocker;
 import java.util.List;

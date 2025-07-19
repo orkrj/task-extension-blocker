@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import flow.extensionblocker.domain.Blocker;
 import flow.extensionblocker.domain.Type;
+import flow.extensionblocker.infrastructure.persistence.JpaBlockerRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
