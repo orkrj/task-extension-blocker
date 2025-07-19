@@ -58,4 +58,9 @@ public class Blocker {
   public void delete() {
     this.deletedAt = LocalDateTime.now();
   }
+
+  public Blocker restore() {
+    this.deletedAt = null;
+    return this;
+  }
 }

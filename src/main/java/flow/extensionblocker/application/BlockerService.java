@@ -7,6 +7,7 @@ import flow.extensionblocker.domain.Blocker;
 import flow.extensionblocker.domain.BlockerRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,11 @@ public class BlockerService {
 
   @Transactional
   public CreateBlockerResponse createBlocker(CreateBlockerRequest request) {
+    Optional<Blocker> checkedBlocker = isBlockerExists(request.extension());
+    if (checkedBlocker.isPresent()) {
+      return CreateBlockerResponse.from(checkedBlocker.get().restore());
+    }
+
     Blocker blocker = blockerRepository.createBlocker(CreateBlockerRequest.toBlocker(request));
     return CreateBlockerResponse.from(blocker);
   }
@@ -28,11 +34,6 @@ public class BlockerService {
         .toList();
   }
 
-  private Blocker findBlocker(String extension) {
-    return blockerRepository.findBlocker(extension)
-        .orElseThrow(() -> new IllegalArgumentException("임시용 예외: " + extension + " 는 없음"));
-  }
-
   @Transactional
   public void deleteBlocker(String extension) {
     Blocker blocker = this.findBlocker(extension);
@@ -41,5 +42,14 @@ public class BlockerService {
     }
 
     blocker.delete();
+  }
+
+  private Optional<Blocker> isBlockerExists(String extension) {
+    return blockerRepository.findBlocker(extension);
+  }
+
+  private Blocker findBlocker(String extension) {
+    return blockerRepository.findBlocker(extension)
+        .orElseThrow(() -> new IllegalArgumentException("임시용 예외: " + extension + " 는 없음"));
   }
 }
