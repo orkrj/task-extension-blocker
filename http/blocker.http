@@ -1,14 +1,40 @@
-### 확장자 차단기 단 건 등록
+### 고정 확장자 차단기 중복 등록
 POST localhost:8080/blockers
 Content-Type: application/json
 
 {
-  "extension": "exe",
-  "type": "CUSTOM"
+  "extension": "exe"
+}
+
+### 커스텀 확장자 차단기 등록
+POST localhost:8080/blockers
+Content-Type: application/json
+
+{
+  "extension": "txt"
+}
+
+### 확장자 차단기 검증 실패
+POST localhost:8080/blockers
+Content-Type: application/json
+
+{
+  "extension": "abcdefghijklmnopqrstuvwxyz"
 }
 
 ### 확장자 차단기 전체 조회
 GET localhost:8080/blockers
 
-### 확장자 차단기 삭제
+### 업로드 차단 테스트
+POST localhost:8080/uploads
+Content-Type: multipart/form-data
+
+file=@./dummy.txt;type=text/plain
+
+### 고정 확장자 차단기 삭제
 PATCH localhost:8080/blockers/exe
+
+### 커스텀 확장자 차단기 삭제
+PATCH localhost:8080/blockers/txt
+
+### 차단된 확장자
