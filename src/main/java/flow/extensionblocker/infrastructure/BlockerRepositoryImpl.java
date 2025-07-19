@@ -27,4 +27,9 @@ public class BlockerRepositoryImpl implements BlockerRepository {
   public Optional<Blocker> findBlocker(String extension) {
     return jpaBlockerRepository.findBlockerByExtension(extension);
   }
+
+  @Override
+  public Optional<Blocker> findBlockerNotDeleted(String extension) {
+    return jpaBlockerRepository.findBlockerByExtensionAndDeletedAtIsNull(extension);
+  }
 }

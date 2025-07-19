@@ -52,4 +52,8 @@ public class BlockerService {
     return blockerRepository.findBlocker(extension)
         .orElseThrow(() -> new IllegalArgumentException("임시용 예외: " + extension + " 는 없음"));
   }
+
+  public boolean isBlocked(String extension) {
+    return blockerRepository.findBlockerNotDeleted(extension).isPresent();
+  }
 }

@@ -10,4 +10,6 @@ public interface BlockerRepository {
   List<Blocker> findBlockers();
 
   Optional<Blocker> findBlocker(String extension);
+
+  Optional<Blocker> findBlockerNotDeleted(String extension);
 }
