@@ -38,6 +38,20 @@ class JpaBlockerRepositoryTest {
     }
 
     @Test
+    @DisplayName("삭제된 차단기는 조회되지 않는다")
+    void test2() {
+      // Given
+      var blocker = sut.save(Blocker.of("exe"));
+      blocker.delete();
+
+      // When
+      var blockers = sut.findBlockers();
+
+      // Then
+      assertFalse(blockers.stream().anyMatch(b -> b.getExtension().equals("exe")));
+    }
+
+    @Test
     @DisplayName("차단기가 없는 경우 빈 리스트를 반환한다")
     void test3() {
       // When

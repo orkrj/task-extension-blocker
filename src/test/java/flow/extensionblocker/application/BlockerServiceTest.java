@@ -5,7 +5,9 @@ import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
 
 import flow.extensionblocker.application.dto.CreateBlockerRequest;
+import flow.extensionblocker.domain.Blocker;
 import flow.extensionblocker.domain.BlockerRepository;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -58,6 +60,37 @@ class BlockerServiceTest {
 
       // Then
       assertThat(response.extension()).isEqualTo("exe");
+    }
+  }
+
+  @Nested
+  @DisplayName("차단기 삭제 테스트")
+  class DeleteBlocker {
+
+    @Mock
+    private BlockerRepository blockerRepository;
+
+    @InjectMocks
+    private BlockerService sut;
+
+    Blocker blocker;
+
+    @BeforeEach
+    void setUp() {
+      blocker = Blocker.of("exe");
+      given(blockerRepository.findBlocker(any()))
+          .willReturn(Optional.of(blocker));
+    }
+
+    @Test
+    @DisplayName("차단기를 논리적으로 삭제한다")
+    void test1() {
+      // When
+      sut.deleteBlocker("exe");
+
+      // Then
+      assertThat(blocker.getDeletedAt()).isNotNull();
+      assertThat(blocker.getExtension()).isEqualTo("exe");
     }
   }
 }
