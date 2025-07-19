@@ -37,7 +37,7 @@ public class Blocker {
   private Long id;
 
   @ValidExtension
-  @Column(nullable = false, updatable = false, length = 10, unique = true)
+  @Column(nullable = false, updatable = false, length = 20, unique = true)
   private String extension;
 
   @Enumerated(EnumType.STRING)
