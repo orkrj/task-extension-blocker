@@ -30,4 +30,13 @@ public class BlockerService {
     return blockerRepository.findBlocker(extension)
         .orElseThrow(() -> new IllegalArgumentException("임시용 예외: " + extension + " 는 없음"));
   }
+
+  public void deleteBlocker(String extension) {
+    Blocker blocker = this.findBlocker(extension);
+    if (blocker.getDeletedAt() != null) {
+      throw new IllegalArgumentException("임시용 예외: " + extension + " 는 이미 삭제됨");
+    }
+
+    blocker.delete();
+  }
 }

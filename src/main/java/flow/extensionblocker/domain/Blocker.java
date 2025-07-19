@@ -54,4 +54,8 @@ public class Blocker {
         .extension(extension.toLowerCase())
         .build();
   }
+
+  public void delete() {
+    this.deletedAt = LocalDateTime.now();
+  }
 }
