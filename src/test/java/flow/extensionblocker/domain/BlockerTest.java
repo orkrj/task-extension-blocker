@@ -67,7 +67,7 @@ class BlockerTest {
     }
 
     @Test
-    @DisplayName("10자 이상의 확장자에 대한 차단기를 생성할 수 없다")
+    @DisplayName("20자를 초과한 확장자에 대한 차단기를 생성할 수 없다")
     void test_fail_2() {
       // Given
       String input = "abcdefghijklmopqrstuv";
