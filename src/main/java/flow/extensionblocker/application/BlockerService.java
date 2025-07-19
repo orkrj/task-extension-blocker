@@ -20,7 +20,7 @@ public class BlockerService {
     return CreateBlockerResponse.from(blocker);
   }
 
-  public List<BlockerResponse> getBlockers(String extension) {
+  public List<BlockerResponse> getBlockers() {
     return blockerRepository.findBlockers().stream()
         .map(BlockerResponse::from)
         .toList();
