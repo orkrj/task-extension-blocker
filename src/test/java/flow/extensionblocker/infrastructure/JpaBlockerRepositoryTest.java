@@ -3,6 +3,7 @@ package flow.extensionblocker.infrastructure;
 import static org.junit.jupiter.api.Assertions.*;
 
 import flow.extensionblocker.domain.Blocker;
+import flow.extensionblocker.domain.Type;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -25,8 +26,8 @@ class JpaBlockerRepositoryTest {
     @DisplayName("차단기를 모두 조회한다")
     void test1() {
       // Given
-      sut.save(Blocker.of("exe"));
-      sut.save(Blocker.of("bat"));
+      sut.save(Blocker.of("exe", Type.CUSTOM));
+      sut.save(Blocker.of("bat", Type.CUSTOM));
 
       // When
       var blockers = sut.findBlockers();
@@ -41,7 +42,7 @@ class JpaBlockerRepositoryTest {
     @DisplayName("삭제된 차단기는 조회되지 않는다")
     void test2() {
       // Given
-      var blocker = sut.save(Blocker.of("exe"));
+      var blocker = sut.save(Blocker.of("exe", Type.CUSTOM));
       blocker.delete();
 
       // When
@@ -71,7 +72,7 @@ class JpaBlockerRepositoryTest {
     void test1() {
       // Given
       String extension = "exe";
-      sut.save(Blocker.of(extension));
+      sut.save(Blocker.of(extension, Type.CUSTOM));
 
       // When
       var blocker = sut.findBlockerByExtension(extension);

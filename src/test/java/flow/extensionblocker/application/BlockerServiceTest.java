@@ -7,6 +7,7 @@ import static org.mockito.BDDMockito.given;
 import flow.extensionblocker.application.dto.CreateBlockerRequest;
 import flow.extensionblocker.domain.Blocker;
 import flow.extensionblocker.domain.BlockerRepository;
+import flow.extensionblocker.domain.Type;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,7 +41,7 @@ class BlockerServiceTest {
     @DisplayName("하나의 확장자에 대한 차단기를 생성한다")
     void test1() {
       // Given
-      CreateBlockerRequest input = new CreateBlockerRequest("exe");
+      CreateBlockerRequest input = new CreateBlockerRequest("exe", Type.CUSTOM);
 
       // When
       var response = sut.createBlocker(input);
@@ -53,7 +54,7 @@ class BlockerServiceTest {
     @DisplayName("입력값이 대문자로 주어진 경우에도 소문자로 변환하여 차단기를 생성한다")
     void test2() {
       // Given
-      CreateBlockerRequest input = new CreateBlockerRequest("EXE");
+      CreateBlockerRequest input = new CreateBlockerRequest("EXE", Type.CUSTOM);
 
       // When
       var response = sut.createBlocker(input);
@@ -71,13 +72,13 @@ class BlockerServiceTest {
     @DisplayName("논리적으로 삭제된 차단기를 다시 생성할 수 있다.")
     void test4() {
       // Given
-      Blocker blocker = Blocker.of("exe");
+      Blocker blocker = Blocker.of("exe", Type.CUSTOM);
       blocker.delete();
 
       given(blockerRepository.findBlocker("exe"))
           .willReturn(Optional.of(blocker));
 
-      CreateBlockerRequest input = new CreateBlockerRequest("exe");
+      CreateBlockerRequest input = new CreateBlockerRequest("exe", Type.CUSTOM);
 
       // When
       var response = sut.createBlocker(input);
@@ -96,7 +97,7 @@ class BlockerServiceTest {
 
     @BeforeEach
     void setUp() {
-      blocker = Blocker.of("exe");
+      blocker = Blocker.of("exe", Type.CUSTOM);
       given(blockerRepository.findBlocker(any()))
           .willReturn(Optional.of(blocker));
     }

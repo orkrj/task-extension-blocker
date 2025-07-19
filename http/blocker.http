@@ -3,7 +3,8 @@ POST localhost:8080/blockers
 Content-Type: application/json
 
 {
-  "extension": "exe"
+  "extension": "exe",
+  "type": "CUSTOM"
 }
 
 ### 확장자 차단기 전체 조회

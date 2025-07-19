@@ -4,6 +4,8 @@ import flow.extensionblocker.common.annotation.ValidExtension;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -38,6 +40,10 @@ public class Blocker {
   @Column(nullable = false, updatable = false, length = 10, unique = true)
   private String extension;
 
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private Type type;
+
   @CreatedDate
   @Column(nullable = false, updatable = false)
   private LocalDateTime createdAt;
@@ -49,9 +55,10 @@ public class Blocker {
   @Column
   private LocalDateTime deletedAt;
 
-  public static Blocker of(String extension) {
+  public static Blocker of(String extension, Type type) {
     return Blocker.builder()
         .extension(extension.toLowerCase())
+        .type(type)
         .build();
   }
 
