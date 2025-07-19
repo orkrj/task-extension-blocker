@@ -1,11 +1,11 @@
 package flow.extensionblocker.common.global.handler;
 
 import flow.extensionblocker.common.dto.ErrorResponse;
-import flow.extensionblocker.common.global.exception.BlockerAlreadyDeletedException;
-import flow.extensionblocker.common.global.exception.BlockerAlreadyExistsException;
-import flow.extensionblocker.common.global.exception.BlockerLimitExceededException;
-import flow.extensionblocker.common.global.exception.BlockerNotFoundException;
-import flow.extensionblocker.common.global.exception.BlockerValidationException;
+import flow.extensionblocker.common.global.exception.blocker.BlockerAlreadyDeletedException;
+import flow.extensionblocker.common.global.exception.blocker.BlockerAlreadyExistsException;
+import flow.extensionblocker.common.global.exception.blocker.BlockerLimitExceededException;
+import flow.extensionblocker.common.global.exception.blocker.BlockerNotFoundException;
+import flow.extensionblocker.common.global.exception.blocker.BlockerValidationException;
 import flow.extensionblocker.common.global.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
