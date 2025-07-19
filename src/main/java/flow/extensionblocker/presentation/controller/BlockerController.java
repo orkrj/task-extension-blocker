@@ -4,6 +4,7 @@ import flow.extensionblocker.application.BlockerService;
 import flow.extensionblocker.application.dto.BlockerResponse;
 import flow.extensionblocker.application.dto.CreateBlockerRequest;
 import flow.extensionblocker.application.dto.CreateBlockerResponse;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,9 @@ public class BlockerController {
   private final BlockerService blockerService;
 
   @PostMapping
-  public ResponseEntity<CreateBlockerResponse> createBlocker(@RequestBody CreateBlockerRequest request) {
+  public ResponseEntity<CreateBlockerResponse> createBlocker(
+      @Valid @RequestBody CreateBlockerRequest request
+  ) {
     return ResponseEntity.ok(blockerService.createBlocker(request));
   }
 
