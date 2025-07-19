@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class BlockerServiceTest {
 
   @Nested
-  @DisplayName("서비스 레이어 레벨 차단기 생성 테스트")
+  @DisplayName("차단기 생성 테스트")
   class CreateBlocker {
 
     @Mock
