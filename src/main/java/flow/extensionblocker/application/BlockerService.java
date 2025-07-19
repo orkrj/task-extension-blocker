@@ -37,8 +37,8 @@ public class BlockerService {
   @Transactional
   public void deleteBlocker(String extension) {
     Blocker blocker = this.findBlocker(extension);
-    if (blocker.getDeletedAt() != null) {
-      throw new IllegalArgumentException("임시용 예외: " + extension + " 는 이미 삭제됨");
+    if (!blocker.isEnabled() && blocker.getDeletedAt() != null) {
+      throw new IllegalArgumentException(extension + " 는 이미 삭제됨");
     }
 
     blocker.delete();
@@ -50,7 +50,7 @@ public class BlockerService {
 
   private Blocker findBlocker(String extension) {
     return blockerRepository.findBlocker(extension)
-        .orElseThrow(() -> new IllegalArgumentException("임시용 예외: " + extension + " 는 없음"));
+        .orElseThrow(() -> new IllegalArgumentException(extension + " 가 없음"));
   }
 
   public boolean isBlocked(String extension) {
