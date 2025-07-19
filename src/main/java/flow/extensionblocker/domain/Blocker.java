@@ -66,6 +66,14 @@ public class Blocker {
         .build();
   }
 
+  public static Blocker of(String extension, Type type, boolean enabled) {
+    return Blocker.builder()
+        .extension(extension.toLowerCase())
+        .type(type)
+        .enabled(enabled)
+        .build();
+  }
+
   public void delete() {
     this.enabled = false;
     this.deletedAt = LocalDateTime.now();
