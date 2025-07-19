@@ -27,8 +27,8 @@ class JpaBlockerRepositoryTest {
     @DisplayName("차단기를 모두 조회한다")
     void test1() {
       // Given
-      sut.save(Blocker.of("exe", Type.CUSTOM));
-      sut.save(Blocker.of("bat", Type.CUSTOM));
+      sut.save(Blocker.of("exe"));
+      sut.save(Blocker.of("bat"));
 
       // When
       var blockers = sut.findBlockers();
@@ -43,7 +43,7 @@ class JpaBlockerRepositoryTest {
     @DisplayName("삭제된 차단기는 조회되지 않는다")
     void test2() {
       // Given
-      var blocker = sut.save(Blocker.of("exe", Type.CUSTOM));
+      var blocker = sut.save(Blocker.of("exe"));
       blocker.delete();
 
       // When
@@ -73,7 +73,7 @@ class JpaBlockerRepositoryTest {
     void test1() {
       // Given
       String extension = "exe";
-      sut.save(Blocker.of(extension, Type.CUSTOM));
+      sut.save(Blocker.of(extension));
 
       // When
       var blocker = sut.findBlockerByExtension(extension);

@@ -58,10 +58,10 @@ public class Blocker {
   @Column
   private LocalDateTime deletedAt;
 
-  public static Blocker of(String extension, Type type) {
+  public static Blocker of(String extension) {
     return Blocker.builder()
         .extension(extension.toLowerCase())
-        .type(type)
+        .type(Type.CUSTOM)
         .enabled(true)
         .build();
   }
