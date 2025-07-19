@@ -1,6 +1,7 @@
 package flow.extensionblocker.presentation.filter;
 
 import flow.extensionblocker.application.BlockerService;
+import flow.extensionblocker.common.global.exception.upload.UploadRejectedException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,7 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -37,12 +37,7 @@ public class ExtensionBlockerFilter extends OncePerRequestFilter {
     String extension = filename.substring(filename.lastIndexOf('.') + 1).toLowerCase();
 
     if (blockerService.isBlocked(extension)) {
-      response.sendError(
-          HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(), // 415
-          extension + " 확장자는 차단되었습니다."
-      );
-
-      return;
+      throw new UploadRejectedException();
     }
 
     filterChain.doFilter(request, response);
