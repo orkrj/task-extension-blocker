@@ -1,0 +1,14 @@
+### 확장자 차단기 단 건 등록
+POST localhost:8080/blockers
+Content-Type: application/json
+
+{
+  "extension": "exe",
+  "type": "CUSTOM"
+}
+
+### 확장자 차단기 전체 조회
+GET localhost:8080/blockers
+
+### 확장자 차단기 삭제
+PATCH localhost:8080/blockers/exe
