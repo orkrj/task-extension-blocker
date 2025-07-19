@@ -84,7 +84,8 @@ class BlockerServiceTest {
       var response = sut.createBlocker(input);
 
       // Then
-      assertThat(blocker.getDeletedAt()).isNull();
+      assertThat(blocker.getDeletedAt()).isNotNull();
+      assertThat(blocker.isEnabled()).isTrue();
       assertThat(response.extension()).isEqualTo("exe");
     }
   }

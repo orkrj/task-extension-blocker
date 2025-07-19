@@ -44,6 +44,9 @@ public class Blocker {
   @Column(nullable = false)
   private Type type;
 
+  @Column(nullable = false)
+  private boolean enabled;
+
   @CreatedDate
   @Column(nullable = false, updatable = false)
   private LocalDateTime createdAt;
@@ -59,15 +62,17 @@ public class Blocker {
     return Blocker.builder()
         .extension(extension.toLowerCase())
         .type(type)
+        .enabled(true)
         .build();
   }
 
   public void delete() {
+    this.enabled = false;
     this.deletedAt = LocalDateTime.now();
   }
 
   public Blocker restore() {
-    this.deletedAt = null;
+    this.enabled = true;
     return this;
   }
 }

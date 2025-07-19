@@ -30,6 +30,6 @@ public class BlockerRepositoryImpl implements BlockerRepository {
 
   @Override
   public Optional<Blocker> findBlockerNotDeleted(String extension) {
-    return jpaBlockerRepository.findBlockerByExtensionAndDeletedAtIsNull(extension);
+    return jpaBlockerRepository.findBlockerByExtensionAndEnabledIsTrue(extension);
   }
 }
