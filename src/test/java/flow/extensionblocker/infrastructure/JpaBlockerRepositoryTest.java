@@ -18,6 +18,37 @@ class JpaBlockerRepositoryTest {
   private JpaBlockerRepository sut;
 
   @Nested
+  @DisplayName("차단기 전체 조회 테스트")
+  class FindBlockers {
+
+    @Test
+    @DisplayName("차단기를 모두 조회한다")
+    void test1() {
+      // Given
+      sut.save(Blocker.of("exe"));
+      sut.save(Blocker.of("bat"));
+
+      // When
+      var blockers = sut.findBlockers();
+
+      // Then
+      assertEquals(2, blockers.size());
+      assertTrue(blockers.stream().anyMatch(b -> b.getExtension().equals("exe")));
+      assertTrue(blockers.stream().anyMatch(b -> b.getExtension().equals("bat")));
+    }
+
+    @Test
+    @DisplayName("차단기가 없는 경우 빈 리스트를 반환한다")
+    void test3() {
+      // When
+      var blockers = sut.findBlockers();
+
+      // Then
+      assertTrue(blockers.isEmpty());
+    }
+  }
+
+  @Nested
   @DisplayName("차단기 조회 테스트")
   class FindBlocker {
 
