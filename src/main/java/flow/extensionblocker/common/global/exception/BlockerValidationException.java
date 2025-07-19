@@ -7,7 +7,7 @@ public class BlockerValidationException extends RuntimeException {
 
   private final int code;
 
-  public BlockerValidationException(int code, String message) {
+  public BlockerValidationException() {
     super(ErrorCode.BLOCKER_VALIDATION_ERROR.getMessage());
     this.code = ErrorCode.BLOCKER_VALIDATION_ERROR.getCode();
   }
