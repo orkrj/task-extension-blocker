@@ -20,15 +20,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class BlockerServiceTest {
 
+  @Mock
+  private BlockerRepository blockerRepository;
+
+  @InjectMocks
+  private BlockerService sut;
+
   @Nested
   @DisplayName("차단기 생성 테스트")
   class CreateBlocker {
-
-    @Mock
-    private BlockerRepository blockerRepository;
-
-    @InjectMocks
-    private BlockerService sut;
 
     @BeforeEach
     void setUp() {
@@ -64,14 +64,33 @@ class BlockerServiceTest {
   }
 
   @Nested
+  @DisplayName("차단기 생성 시나리오 테스트")
+  class CreateBlockerScenario {
+
+    @Test
+    @DisplayName("논리적으로 삭제된 차단기를 다시 생성할 수 있다.")
+    void test4() {
+      // Given
+      Blocker blocker = Blocker.of("exe");
+      blocker.delete();
+
+      given(blockerRepository.findBlocker("exe"))
+          .willReturn(Optional.of(blocker));
+
+      CreateBlockerRequest input = new CreateBlockerRequest("exe");
+
+      // When
+      var response = sut.createBlocker(input);
+
+      // Then
+      assertThat(blocker.getDeletedAt()).isNull();
+      assertThat(response.extension()).isEqualTo("exe");
+    }
+  }
+
+  @Nested
   @DisplayName("차단기 삭제 테스트")
   class DeleteBlocker {
-
-    @Mock
-    private BlockerRepository blockerRepository;
-
-    @InjectMocks
-    private BlockerService sut;
 
     Blocker blocker;
 
