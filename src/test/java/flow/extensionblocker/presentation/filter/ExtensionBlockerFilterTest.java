@@ -1,9 +1,11 @@
 package flow.extensionblocker.presentation.filter;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
 import flow.extensionblocker.application.BlockerService;
+import flow.extensionblocker.common.global.exception.upload.UploadRejectedException;
 import jakarta.servlet.ServletException;
 import java.io.IOException;
 import org.junit.jupiter.api.DisplayName;
@@ -31,7 +33,7 @@ class ExtensionBlockerFilterTest {
   private ExtensionBlockerFilter sut;
 
   @Test
-  @DisplayName("차단된 확장자에 대한 upload 요청은 415 에러를 반환한다")
+  @DisplayName("차단된 확장자에 대한 upload 요청은 UploadRejectedException 예외를 반환한다")
   void test1() throws ServletException, IOException {
     // Given
     var request = new MockHttpServletRequest();
@@ -43,11 +45,10 @@ class ExtensionBlockerFilterTest {
 
     given(blockerService.isBlocked("exe")).willReturn(true);
 
-    // When
-    sut.doFilterInternal(request, response, chain);
-
-    // Then
-    assertThat(response.getStatus()).isEqualTo(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value());
+    // When & Then
+    assertThatThrownBy(() -> sut.doFilter(request, response, chain))
+        .isInstanceOf(UploadRejectedException.class)
+        .hasMessage("차단기에 의해 업로드 요청이 거부되었습니다.");
   }
 
   @Test
