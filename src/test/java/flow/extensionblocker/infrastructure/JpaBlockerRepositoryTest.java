@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import flow.extensionblocker.domain.Blocker;
 import flow.extensionblocker.domain.Type;
 import flow.extensionblocker.infrastructure.persistence.JpaBlockerRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -67,6 +66,23 @@ class JpaBlockerRepositoryTest {
       assertEquals(2, fixedBlockers.size());
       assertTrue(fixedBlockers.stream().anyMatch(b -> b.getExtension().equals("exe")));
       assertTrue(fixedBlockers.stream().anyMatch(b -> b.getExtension().equals("bat")));
+    }
+
+    @Test
+    @DisplayName("활성화된 커스텀 확장자 차단기 등록 개수를 조회한다.")
+    void test4() {
+      // Given
+      sut.save(Blocker.of("abc", Type.CUSTOM, true));
+      sut.save(Blocker.of("def", Type.CUSTOM, true));
+      sut.save(Blocker.of("ghi", Type.CUSTOM, false));
+      sut.save(Blocker.of("jkl", Type.CUSTOM, true));
+      sut.save(Blocker.of("mno", Type.FIXED, true));
+
+      // When
+      int customCount = sut.countCustomBlockers();
+
+      // Then
+      assertEquals(3, customCount);
     }
   }
 
