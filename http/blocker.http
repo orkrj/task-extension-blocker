@@ -1,3 +1,6 @@
+### 고정 확장자 차단기 전부 조회
+GET localhost:8080/blockers/fixed
+
 ### 고정 확장자 차단기 중복 등록
 POST localhost:8080/blockers
 Content-Type: application/json

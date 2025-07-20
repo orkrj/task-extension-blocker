@@ -51,6 +51,23 @@ class JpaBlockerRepositoryTest {
       // Then
       assertFalse(blocker.isPresent());
     }
+
+    @Test
+    @DisplayName("고정 확장자 차단기를 전부 조회한다.")
+    void test3() {
+      // Given
+      sut.save(Blocker.of("exe", Type.FIXED, true));
+      sut.save(Blocker.of("bat", Type.FIXED, false));
+      sut.save(Blocker.of("txt", Type.CUSTOM, true));
+
+      // When
+      var fixedBlockers = sut.getAllFixedBlockers();
+
+      // Then
+      assertEquals(2, fixedBlockers.size());
+      assertTrue(fixedBlockers.stream().anyMatch(b -> b.getExtension().equals("exe")));
+      assertTrue(fixedBlockers.stream().anyMatch(b -> b.getExtension().equals("bat")));
+    }
   }
 
   @Nested
