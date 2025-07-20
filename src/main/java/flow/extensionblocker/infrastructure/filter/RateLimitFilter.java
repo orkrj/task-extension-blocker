@@ -68,7 +68,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
   private void handleRateLimitExceeded(HttpServletResponse response) throws IOException {
     response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
-    response.setContentType("application/json; charset=UTF-8");
+    response.setContentType("application/json;charset=UTF-8");
     response.setHeader("Retry-After", "600");
     response.getWriter().write("너무 많은 요청이 발생했습니다. 잠시 후 다시 시도해주세요.");
     response.getWriter().flush();

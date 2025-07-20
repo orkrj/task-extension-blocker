@@ -17,7 +17,7 @@ public class RateLimitStorage {
 
     fixedWindow.compute(clientKey, (key, startTime) -> {
       if (startTime == null || now - startTime >= windowSize) {
-        requestCounts.put(key, new AtomicInteger(1));
+        requestCounts.put(key, new AtomicInteger(0));
         return now;
       }
 
@@ -27,14 +27,9 @@ public class RateLimitStorage {
     Long currentWindowStart = fixedWindow.get(clientKey);
     if (currentWindowStart != null && (now - currentWindowStart) < windowSize) {
       AtomicInteger counter = requestCounts.get(clientKey);
-      if (counter != null) {
-        int currentCount = counter.get();
-        if (currentCount < limit) {
-          return counter.incrementAndGet() <= limit;
-        }
 
-        return false;
-      }
+      if (counter != null) {return counter.incrementAndGet() <= limit;}
+      return false;
     }
 
     return true;
@@ -43,7 +38,7 @@ public class RateLimitStorage {
   @Scheduled(fixedRate = 300_000)
   public void clean() {
     long now = System.currentTimeMillis();
-    long expireTime = 10 * 60 * 1000;
+    long expireTime = 15 * 60 * 1000;
 
     fixedWindow.entrySet().removeIf(entry -> {
       if (now - entry.getValue() > expireTime) {
