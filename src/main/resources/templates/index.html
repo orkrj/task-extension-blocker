@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>파일 확장자 차단 과제</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      position: relative;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      color: #333;
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      flex: 1;
+    }
+
+    .creator-field {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .creator-field:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .creator-field::before {
+      content: '👨‍💻';
+      font-size: 1.2rem;
+    }
+
+    .creator-field::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      animation: shine 2s infinite;
+    }
+
+    @keyframes shine {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .section {
+      margin-bottom: 40px;
+      padding: 30px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(102, 126, 234, 0.1);
+    }
+
+    .section h2 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section h2::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 2px;
+    }
+
+    .custom-count {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #e8ecff;
+      color: #667eea;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid rgba(102, 126, 234, 0.2);
+      margin-left: auto;
+    }
+
+    .custom-count-icon {
+      font-size: 1rem;
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      background: #f8f9ff;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: 2px solid transparent;
+      user-select: none;
+    }
+
+    .checkbox-item:hover {
+      background: #e8ecff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    }
+
+    .checkbox-item.checked {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border-color: #667eea;
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      margin-right: 8px;
+      width: 18px;
+      height: 18px;
+      accent-color: #667eea;
+    }
+
+    .checkbox-item.checked input[type="checkbox"] {
+      accent-color: white;
+    }
+
+    .custom-form {
+      display: flex;
+      gap: 15px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .form-group {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-weight: 500;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e1e5e9;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      background: #f8f9ff;
+      height: 48px;
+      box-sizing: border-box;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      background: white;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      min-width: 100px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .custom-list {
+      margin-top: 25px;
+    }
+
+    .custom-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 20px;
+      background: #f8f9ff;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(102, 126, 234, 0.1);
+    }
+
+    .custom-item:hover {
+      background: #e8ecff;
+      transform: translateX(5px);
+    }
+
+    .custom-item .extension {
+      font-weight: 600;
+      color: #333;
+      font-size: 16px;
+    }
+
+    .delete-btn {
+      width: 32px;
+      height: 32px;
+      background: #ff4757;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.3s ease;
+    }
+
+    .delete-btn:hover {
+      background: #ff3742;
+      transform: scale(1.1);
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #666;
+      font-style: italic;
+      padding: 30px;
+      background: #f8f9ff;
+      border-radius: 10px;
+      border: 2px dashed #ddd;
+    }
+
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s linear infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .error-message {
+      background: #ffe6e6;
+      color: #d63031;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #fab1a0;
+      display: none;
+    }
+
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #c3e6cb;
+      display: none;
+    }
+
+    .upload-form {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .file-input-wrapper {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .file-input-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .file-input-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      background: #f8f9ff;
+      border: 2px dashed #667eea;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      color: #667eea;
+      height: 48px;
+      box-sizing: border-box;
+      flex: 1;
+    }
+
+    .file-input-label:hover {
+      background: #e8ecff;
+      border-color: #764ba2;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    }
+
+    .file-input-label.has-file {
+      border-style: solid;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+
+    .file-icon {
+      font-size: 1.5rem;
+    }
+
+    .file-text {
+      font-size: 16px;
+    }
+
+    .file-name {
+      font-size: 14px;
+      color: #666;
+      padding-left: 4px;
+    }
+
+    .file-name.selected {
+      color: #667eea;
+      font-weight: 500;
+    }
+
+    .upload-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 160px;
+      justify-content: center;
+      align-self: flex-start;
+    }
+
+    .upload-icon {
+      font-size: 1.2rem;
+    }
+
+    .upload-description {
+      color: #666;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: #f8f9ff;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+    }
+
+    .upload-info {
+      margin-top: 20px;
+      padding: 16px;
+      background: #fff3cd;
+      border: 1px solid #ffeaa7;
+      border-radius: 8px;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #856404;
+      font-size: 14px;
+    }
+
+    .info-icon {
+      font-size: 16px;
+    }
+
+    .upload-status {
+      margin-top: 15px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-weight: 500;
+      display: none;
+    }
+
+    .upload-status.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .global-message {
+      position: fixed;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 500px;
+      width: auto;
+      min-width: 300px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      font-weight: 500;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .global-message.show {
+      top: 20px;
+    }
+
+    .global-message.success {
+      background: #d4edda;
+      color: #155724;
+      border-left: 4px solid #28a745;
+    }
+
+    .global-message.error {
+      background: #f8d7da;
+      color: #721c24;
+      border-left: 4px solid #dc3545;
+    }
+
+    .global-message-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .global-message-close {
+      margin-left: auto;
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+      padding: 0;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .global-message-close:hover {
+      opacity: 1;
+    }
+
+    .upload-status.blocked {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    @media (max-width: 768px) {
+      .global-message {
+        top: -100px;
+        left: 10px;
+        right: 10px;
+        max-width: none;
+        min-width: auto;
+        width: calc(100% - 20px);
+        transform: none;
+      }
+
+      .global-message.show {
+        top: 10px;
+      }
+
+      .header {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .creator-field {
+        align-self: stretch;
+        justify-content: center;
+      }
+
+      .upload-form {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .file-input-wrapper {
+        min-width: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container fade-in">
+  <div class="header">
+    <h1>🛡️ 파일 확장자 차단기</h1>
+    <div class="creator-field" onclick="window.open('https://github.com/orkrj/task-extension-blocker', '_blank')">정우준</div>
+  </div>
+
+  <!-- 고정 확장자 섹션 -->
+  <div class="section">
+    <h2>고정 확장자</h2>
+    <div class="checkbox-grid" id="fixedExtensions">
+    </div>
+  </div>
+
+  <!-- 커스텀 확장자 섹션 -->
+  <div class="section">
+    <h2>
+      <span>커스텀 확장자</span>
+      <div class="custom-count" id="customCount">
+        <span class="custom-count-icon">📊</span>
+        <span id="customCountText">0/0개</span>
+      </div>
+    </h2>
+    <div class="error-message" id="errorMessage"></div>
+    <div class="success-message" id="successMessage"></div>
+
+    <form class="custom-form" onsubmit="addCustomExtension(event)">
+      <div class="form-group">
+        <label for="customExtension">확장자 입력 (최대 20자)</label>
+        <input type="text"
+               id="customExtension"
+               name="extension"
+               maxlength="20"
+               placeholder="예: pdf, docx"
+               pattern="[a-zA-Z0-9]+"
+               title="영문자와 숫자만 입력 가능합니다"
+               required>
+      </div>
+      <button type="submit" class="btn">추가</button>
+    </form>
+
+    <div class="custom-list">
+      <div id="customBlockersList">
+        <div class="empty-state">등록된 커스텀 확장자가 없습니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 파일 업로드 테스트 섹션 -->
+  <div class="section">
+    <h2>파일 업로드 테스트</h2>
+    <div class="upload-description">
+      설정한 확장자 차단 규칙을 테스트해보세요. 차단된 확장자의 파일은 업로드가 거부됩니다.
+    </div>
+
+    <div class="error-message" id="uploadErrorMessage"></div>
+    <div class="success-message" id="uploadSuccessMessage"></div>
+
+    <form class="upload-form" onsubmit="uploadFile(event)">
+      <div class="file-input-wrapper">
+        <div class="file-input-container">
+          <input type="file"
+                 id="fileInput"
+                 name="file"
+                 class="file-input"
+                 onchange="updateFileName(this)"
+                 required>
+          <label for="fileInput" class="file-input-label">
+            <span class="file-icon">📁</span>
+            <span class="file-text">파일 선택</span>
+          </label>
+        </div>
+        <div class="file-name" id="fileName">선택된 파일이 없습니다</div>
+      </div>
+      <button type="submit" class="btn upload-btn">
+        <span class="upload-icon">⬆️</span>
+        업로드 테스트
+      </button>
+    </form>
+
+    <div class="upload-info">
+      <div class="info-item">
+        <span class="info-icon">ℹ️</span>
+        <span>실제로 파일이 저장되지는 않으며, 확장자 검증만 수행됩니다.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 글로벌 메시지 팝업 -->
+<div class="global-message" id="globalMessage">
+  <span class="global-message-icon" id="globalMessageIcon"></span>
+  <span class="global-message-text" id="globalMessageText"></span>
+  <button class="global-message-close" onclick="hideGlobalMessage()">×</button>
+</div>
+
+<script>
+  let allBlockers = [];
+
+  // 페이지 로드 시 초기화
+  document.addEventListener('DOMContentLoaded', async function() {
+    await loadFixedExtensions();
+    await loadCustomExtensions();
+    await loadCustomCount();
+  });
+
+  // 커스텀 확장자 개수 로드
+  async function loadCustomCount() {
+    try {
+      const response = await fetch('/blockers/custom/count');
+      if (!response.ok) {
+        throw new Error('커스텀 확장자 개수 로드 실패');
+      }
+
+      const data = await response.json();
+      updateCustomCount(data.count, data.limit);
+    } catch (error) {
+      console.error('커스텀 확장자 개수 로드 오류:', error);
+      // 개수 로드 실패 시 기본값 유지
+      updateCustomCount(0, 0);
+    }
+  }
+
+  // 커스텀 확장자 개수 업데이트
+  function updateCustomCount(count, limit) {
+    const countText = document.getElementById('customCountText');
+    countText.textContent = `${count}/${limit}개`;
+  }
+
+  // 글로벌 메시지 표시
+  function showGlobalMessage(message, type) {
+    const messageDiv = document.getElementById('globalMessage');
+    const iconDiv = document.getElementById('globalMessageIcon');
+    const textDiv = document.getElementById('globalMessageText');
+
+    // 이전 클래스 제거
+    messageDiv.classList.remove('success', 'error', 'show');
+
+    // 아이콘과 메시지 설정
+    if (type === 'success') {
+      iconDiv.textContent = '✅';
+      messageDiv.classList.add('success');
+    } else {
+      iconDiv.textContent = '❌';
+      messageDiv.classList.add('error');
+    }
+
+    textDiv.textContent = message;
+
+    // 메시지 표시
+    setTimeout(() => messageDiv.classList.add('show'), 10);
+
+    // 5초 후 자동 숨김
+    setTimeout(() => {
+      hideGlobalMessage();
+    }, 5000);
+  }
+
+  // 글로벌 메시지 숨김
+  function hideGlobalMessage() {
+    const messageDiv = document.getElementById('globalMessage');
+    messageDiv.classList.remove('show');
+  }
+
+  // 체크박스 아이템 클릭 처리
+  function toggleCheckboxItem(item, extension) {
+    const checkbox = item.querySelector('input[type="checkbox"]');
+    checkbox.checked = !checkbox.checked;
+
+    // 체크박스 change 이벤트 트리거
+    const event = new Event('change', { bubbles: true });
+    checkbox.dispatchEvent(event);
+  }
+
+  // 고정 확장자 로드
+  async function loadFixedExtensions() {
+    try {
+      const response = await fetch('/blockers/fixed');
+      if (!response.ok) {
+        throw new Error('고정 확장자 로드 실패');
+      }
+
+      const fixedBlockers = await response.json();
+      renderFixedExtensions(fixedBlockers);
+    } catch (error) {
+      console.error('고정 확장자 로드 오류:', error);
+      showGlobalMessage('고정 확장자 로드 중 오류가 발생했습니다.', 'error');
+    }
+  }
+
+  // 고정 확장자 렌더링
+  function renderFixedExtensions(fixedBlockers) {
+    const container = document.getElementById('fixedExtensions');
+
+    container.innerHTML = fixedBlockers.map(blocker => `
+      <div class="checkbox-item ${blocker.enabled ? 'checked' : ''}" id="fixed-${blocker.extension}" onclick="toggleCheckboxItem(this, '${blocker.extension}')">
+        <input type="checkbox"
+               id="checkbox-${blocker.extension}"
+               ${blocker.enabled ? 'checked' : ''}
+               data-extension="${blocker.extension}"
+               onchange="toggleFixedExtension(this)"
+               onclick="event.stopPropagation()">
+        <label for="checkbox-${blocker.extension}">${blocker.extension}</label>
+      </div>
+    `).join('');
+  }
+
+  // 커스텀 확장자 로드
+  async function loadCustomExtensions() {
+    try {
+      const response = await fetch('/blockers');
+      if (!response.ok) {
+        throw new Error('확장자 목록 로드 실패');
+      }
+
+      const blockers = await response.json();
+      const customBlockers = blockers.filter(blocker =>
+          blocker.type === 'CUSTOM' && blocker.enabled
+      );
+
+      renderCustomExtensions(customBlockers);
+    } catch (error) {
+      console.error('커스텀 확장자 로드 오류:', error);
+      showGlobalMessage('커스텀 확장자 로드 중 오류가 발생했습니다.', 'error');
+    }
+  }
+
+  // 커스텀 확장자 렌더링
+  function renderCustomExtensions(customBlockers) {
+    const listContainer = document.getElementById('customBlockersList');
+
+    if (customBlockers.length === 0) {
+      listContainer.innerHTML = '<div class="empty-state">등록된 커스텀 확장자가 없습니다.</div>';
+    } else {
+      listContainer.innerHTML = customBlockers.map(blocker => `
+        <div class="custom-item fade-in">
+          <span class="extension">${blocker.extension}</span>
+          <button class="delete-btn" onclick="deleteCustomExtension('${blocker.extension}')">×</button>
+        </div>
+      `).join('');
+    }
+  }
+
+  // 고정 확장자 토글
+  async function toggleFixedExtension(checkbox) {
+    const extension = checkbox.dataset.extension;
+    const isChecked = checkbox.checked;
+    const item = checkbox.parentElement;
+
+    try {
+      item.classList.add('loading');
+
+      if (isChecked) {
+        // 생성 API 호출
+        const response = await fetch('/blockers', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            extension: extension
+          })
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(errorText);
+        }
+
+        const result = await response.json();
+        if (result.enabled) {
+          item.classList.add('checked');
+          showGlobalMessage(`'${extension}' 고정 확장자가 활성화되었습니다.`, 'success');
+        }
+      } else {
+        // 삭제 API 호출
+        const response = await fetch(`/blockers/${extension}`, {
+          method: 'PATCH'
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(errorText);
+        }
+
+        item.classList.remove('checked');
+        showGlobalMessage(`'${extension}' 고정 확장자가 비활성화되었습니다.`, 'success');
+      }
+    } catch (error) {
+      console.error('API 오류:', error);
+      checkbox.checked = !isChecked; // 체크박스 원상복구
+      if (isChecked) {
+        item.classList.remove('checked');
+      } else {
+        item.classList.add('checked');
+      }
+      showGlobalMessage(error.message || '처리 중 오류가 발생했습니다.', 'error');
+    } finally {
+      item.classList.remove('loading');
+    }
+  }
+
+  // 커스텀 확장자 추가
+  async function addCustomExtension(event) {
+    event.preventDefault();
+
+    const form = event.target;
+    const extensionInput = form.extension;
+    const extension = extensionInput.value.trim().toLowerCase();
+
+    if (!extension) {
+      showGlobalMessage('확장자를 입력해주세요.', 'error');
+      return;
+    }
+
+    try {
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="loading-spinner"></span>추가 중...';
+
+      const response = await fetch('/blockers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          extension: extension
+        })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText);
+      }
+
+      const result = await response.json();
+      extensionInput.value = '';
+
+      // 고정 확장자인지 확인하고 UI 업데이트
+      if (result.type === 'FIXED') {
+        await updateFixedExtensionUI(extension, true);
+        showGlobalMessage(`'${extension}' 고정 확장자가 활성화되었습니다.`, 'success');
+      } else {
+        await loadCustomExtensions();
+        await loadCustomCount(); // 커스텀 확장자 개수 업데이트
+        showGlobalMessage(`'${extension}' 커스텀 확장자가 추가되었습니다.`, 'success');
+      }
+    } catch (error) {
+      console.error('API 오류:', error);
+      showGlobalMessage(error.message || '추가 중 오류가 발생했습니다.', 'error');
+    } finally {
+      const submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '추가';
+    }
+  }
+
+  // 커스텀 확장자 삭제
+  async function deleteCustomExtension(extension) {
+    if (!confirm(`'${extension}' 확장자를 삭제하시겠습니까?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/blockers/${extension}`, {
+        method: 'PATCH'
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText);
+      }
+
+      await loadCustomExtensions();
+      await loadCustomCount(); // 커스텀 확장자 개수 업데이트
+      showGlobalMessage(`'${extension}' 커스텀 확장자가 삭제되었습니다.`, 'success');
+    } catch (error) {
+      console.error('API 오류:', error);
+      showGlobalMessage(error.message || '삭제 중 오류가 발생했습니다.', 'error');
+    }
+  }
+
+  // 고정 확장자 UI 업데이트 (커스텀에서 고정 확장자 활성화할 때 사용)
+  async function updateFixedExtensionUI(extension, isEnabled) {
+    const fixedItem = document.getElementById(`fixed-${extension}`);
+    const checkbox = document.getElementById(`checkbox-${extension}`);
+
+    if (fixedItem && checkbox) {
+      checkbox.checked = isEnabled;
+      if (isEnabled) {
+        fixedItem.classList.add('checked');
+      } else {
+        fixedItem.classList.remove('checked');
+      }
+    }
+  }
+
+  // 파일명 업데이트
+  function updateFileName(input) {
+    const fileName = document.getElementById('fileName');
+    const label = input.nextElementSibling;
+
+    if (input.files.length > 0) {
+      const file = input.files[0];
+      fileName.textContent = file.name;
+      fileName.classList.add('selected');
+      label.classList.add('has-file');
+
+      // 파일 확장자 추출 및 미리 확인
+      const extension = file.name.split('.').pop().toLowerCase();
+      checkExtensionPreview(extension);
+    } else {
+      fileName.textContent = '선택된 파일이 없습니다';
+      fileName.classList.remove('selected');
+      label.classList.remove('has-file');
+    }
+  }
+
+  // 확장자 미리 확인 (선택적)
+  async function checkExtensionPreview(extension) {
+    try {
+      // blockers 목록을 가져와서 차단된 확장자인지 확인
+      const response = await fetch('/blockers');
+      const blockers = await response.json();
+      const isBlocked = blockers.some(blocker =>
+          blocker.extension === extension && blocker.enabled
+      );
+
+      const fileName = document.getElementById('fileName');
+      if (isBlocked) {
+        fileName.style.color = '#dc3545';
+        fileName.innerHTML += ' <span style="font-weight: bold;">(차단된 확장자)</span>';
+      }
+    } catch (error) {
+      // 미리보기 확인 실패는 무시
+      console.log('확장자 미리보기 확인 실패:', error);
+    }
+  }
+
+  // 파일 업로드
+  async function uploadFile(event) {
+    event.preventDefault();
+
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+
+    if (!file) {
+      showUploadMessage('파일을 선택해주세요.', 'error');
+      return;
+    }
+
+    // 확장자 추출
+    const extension = file.name.split('.').pop().toLowerCase();
+
+    try {
+      const submitBtn = event.target.querySelector('button[type="submit"]');
+      const originalHTML = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="loading-spinner"></span>업로드 중...';
+
+      // 먼저 확장자가 차단되었는지 확인
+      const blockersResponse = await fetch('/blockers');
+      const blockers = await blockersResponse.json();
+      const isBlocked = blockers.some(blocker =>
+          blocker.extension === extension && blocker.enabled
+      );
+
+      if (isBlocked) {
+        showUploadMessage(
+            `'${extension}' 확장자는 차단된 파일 형식입니다. 업로드할 수 없습니다.`,
+            'error'
+        );
+        return;
+      }
+
+      // 파일 업로드 API 호출
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const uploadResponse = await fetch('/uploads', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (uploadResponse.status === 201) {
+        showUploadMessage(
+            `'${file.name}' 파일이 성공적으로 업로드되었습니다! (확장자: ${extension})`,
+            'success'
+        );
+        // 폼 리셋
+        fileInput.value = '';
+        updateFileName(fileInput);
+      } else {
+        throw new Error('업로드 실패');
+      }
+    } catch (error) {
+      console.error('업로드 오류:', error);
+      showUploadMessage(
+          error.message || '업로드 중 오류가 발생했습니다.',
+          'error'
+      );
+    } finally {
+      const submitBtn = event.target.querySelector('button[type="submit"]');
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<span class="upload-icon">⬆️</span>업로드 테스트';
+    }
+  }
+
+  // 업로드 메시지 표시
+  function showUploadMessage(message, type) {
+    const errorDiv = document.getElementById('uploadErrorMessage');
+    const successDiv = document.getElementById('uploadSuccessMessage');
+
+    // 이전 메시지 숨기기
+    errorDiv.style.display = 'none';
+    successDiv.style.display = 'none';
+
+    if (type === 'error') {
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      setTimeout(() => errorDiv.style.display = 'none', 5000);
+    } else {
+      successDiv.textContent = message;
+      successDiv.style.display = 'block';
+      setTimeout(() => successDiv.style.display = 'none', 4000);
+    }
+  }
+
+  // 메시지 표시
+  function showMessage(message, type) {
+    const errorDiv = document.getElementById('errorMessage');
+    const successDiv = document.getElementById('successMessage');
+
+    // 이전 메시지 숨기기
+    errorDiv.style.display = 'none';
+    successDiv.style.display = 'none';
+
+    if (type === 'error') {
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      setTimeout(() => errorDiv.style.display = 'none', 5000);
+    } else {
+      successDiv.textContent = message;
+      successDiv.style.display = 'block';
+      setTimeout(() => successDiv.style.display = 'none', 3000);
+    }
+  }
+</script>
+</body>
+</html>
