@@ -89,7 +89,7 @@ class RateLimitFilterTest {
     @DisplayName("레이트 리미트 초과시 429 에러를 반환한다")
     void test1() throws Exception {
       // given
-      request.setRequestURI("/blcockers");
+      request.setRequestURI("/blockers");
       request.setMethod("GET");
       request.setRemoteAddr("192.168.1.1");
       request.addHeader("User-Agent", "Mozilla/5.0");
