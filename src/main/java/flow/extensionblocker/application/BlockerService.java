@@ -3,6 +3,7 @@ package flow.extensionblocker.application;
 import flow.extensionblocker.application.dto.BlockerResponse;
 import flow.extensionblocker.application.dto.CreateBlockerRequest;
 import flow.extensionblocker.application.dto.CreateBlockerResponse;
+import flow.extensionblocker.application.dto.CustomBlockerCountResponse;
 import flow.extensionblocker.common.global.exception.blocker.BlockerAlreadyDeletedException;
 import flow.extensionblocker.common.global.exception.blocker.BlockerAlreadyExistsException;
 import flow.extensionblocker.common.global.exception.blocker.BlockerLimitExceededException;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Service;
 public class BlockerService {
 
   private final BlockerRepository blockerRepository;
+
+  private final static int CUSTOM_BLOCKER_LIMIT = 200;
 
   @Transactional
   public CreateBlockerResponse createBlocker(CreateBlockerRequest request) {
@@ -44,6 +47,10 @@ public class BlockerService {
     return blockerRepository.getAllFixedBlockers().stream()
         .map(BlockerResponse::from)
         .toList();
+  }
+
+  public CustomBlockerCountResponse getCustomBlockerCount() {
+    return CustomBlockerCountResponse.of(blockerRepository.countCustomBlockers(), CUSTOM_BLOCKER_LIMIT);
   }
 
   @Transactional
@@ -76,6 +83,6 @@ public class BlockerService {
   }
 
   public boolean isOverCustomBlockerLimit() {
-    return 200 - blockerRepository.countCustomBlockers() <= 0;
+    return CUSTOM_BLOCKER_LIMIT - blockerRepository.countCustomBlockers() <= 0;
   }
 }

@@ -4,11 +4,11 @@ import flow.extensionblocker.application.BlockerService;
 import flow.extensionblocker.application.dto.BlockerResponse;
 import flow.extensionblocker.application.dto.CreateBlockerRequest;
 import flow.extensionblocker.application.dto.CreateBlockerResponse;
+import flow.extensionblocker.application.dto.CustomBlockerCountResponse;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController // TODO controller 로 변경
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/blockers")
 public class BlockerController {
@@ -39,6 +39,11 @@ public class BlockerController {
   @GetMapping("/fixed")
   public ResponseEntity<List<BlockerResponse>> getAllFixedBlockers() {
     return ResponseEntity.ok(blockerService.getAllFixedBlockers());
+  }
+
+  @GetMapping("/custom/count")
+  public ResponseEntity<CustomBlockerCountResponse> getCustomBlockerCount() {
+    return ResponseEntity.ok(blockerService.getCustomBlockerCount());
   }
 
   @PatchMapping("/{extension}")
