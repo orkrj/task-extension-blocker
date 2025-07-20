@@ -34,6 +34,11 @@ public class BlockerRepositoryImpl implements BlockerRepository {
   }
 
   @Override
+  public List<Blocker> getAllFixedBlockers() {
+    return jpaBlockerRepository.getAllFixedBlockers();
+  }
+
+  @Override
   public int countCustomBlockers() {
     return jpaBlockerRepository.countCustomBlockers();
   }

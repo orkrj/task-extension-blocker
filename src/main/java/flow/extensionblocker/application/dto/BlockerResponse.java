@@ -5,9 +5,10 @@ import flow.extensionblocker.domain.Type;
 
 public record BlockerResponse(
     String extension,
-    Type type
+    Type type,
+    boolean enabled
 ) {
   public static BlockerResponse from(Blocker blocker) {
-    return new BlockerResponse(blocker.getExtension(), blocker.getType());
+    return new BlockerResponse(blocker.getExtension(), blocker.getType(), blocker.isEnabled());
   }
 }
