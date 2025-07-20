@@ -27,7 +27,7 @@ class BlockerTest {
       String input = "a";
 
       // When
-      var blocker = Blocker.of(input, Type.CUSTOM);
+      var blocker = Blocker.of(input);
       var violations = validator.validate(blocker);
 
       // Then
@@ -42,7 +42,7 @@ class BlockerTest {
       String input = "abcdefghijklmopqrstu";
 
       // When
-      var blocker = Blocker.of(input, Type.CUSTOM);
+      var blocker = Blocker.of(input);
       var violations = validator.validate(blocker);
 
       // Then
@@ -57,7 +57,7 @@ class BlockerTest {
       String input = "";
 
       // When
-      var blocker = Blocker.of(input, Type.CUSTOM);
+      var blocker = Blocker.of(input);
       var violations = validator.validate(blocker);
 
       // Then
@@ -73,7 +73,7 @@ class BlockerTest {
       String input = "abcdefghijklmopqrstuv";
 
       // When
-      var blocker = Blocker.of(input, Type.CUSTOM);
+      var blocker = Blocker.of(input);
       var violations = validator.validate(blocker);
 
       // Then
@@ -89,7 +89,7 @@ class BlockerTest {
       String input = "abcdef*";
 
       // When
-      var blocker = Blocker.of(input, Type.CUSTOM);
+      var blocker = Blocker.of(input);
       var violations = validator.validate(blocker);
 
       // Then
@@ -105,7 +105,7 @@ class BlockerTest {
       String input = "abc def";
 
       // When
-      var blocker = Blocker.of(input, Type.CUSTOM);
+      var blocker = Blocker.of(input);
       var violations = validator.validate(blocker);
 
       // Then
