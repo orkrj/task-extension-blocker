@@ -36,6 +36,11 @@ public class BlockerController {
     return ResponseEntity.ok(blockerService.getBlockers());
   }
 
+  @GetMapping("/fixed")
+  public ResponseEntity<List<BlockerResponse>> getAllFixedBlockers() {
+    return ResponseEntity.ok(blockerService.getAllFixedBlockers());
+  }
+
   @PatchMapping("/{extension}")
   public ResponseEntity<Void> deleteBlocker(@PathVariable String extension) {
     blockerService.deleteBlocker(extension);
