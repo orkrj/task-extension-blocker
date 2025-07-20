@@ -65,7 +65,7 @@ class ExtensionBlockerFilterTest {
     given(blockerService.isBlocked("txt")).willReturn(false);
 
     // When
-    sut.doFilterInternal(request, response, chain);
+    sut.doFilter(request, response, chain);
 
     // Then
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
