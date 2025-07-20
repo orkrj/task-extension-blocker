@@ -13,5 +13,7 @@ public interface BlockerRepository {
 
   Optional<Blocker> findBlockerNotDeleted(String extension);
 
+  List<Blocker> getAllFixedBlockers();
+
   int countCustomBlockers();
 }

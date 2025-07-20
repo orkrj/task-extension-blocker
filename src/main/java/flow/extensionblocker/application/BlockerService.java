@@ -40,6 +40,12 @@ public class BlockerService {
         .toList();
   }
 
+  public List<BlockerResponse> getAllFixedBlockers() {
+    return blockerRepository.getAllFixedBlockers().stream()
+        .map(BlockerResponse::from)
+        .toList();
+  }
+
   @Transactional
   public void deleteBlocker(String extension) {
     Blocker blocker = this.findBlocker(extension);

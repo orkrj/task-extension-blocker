@@ -15,6 +15,9 @@ public interface JpaBlockerRepository extends JpaRepository<Blocker, Long> {
   @Query("SELECT b FROM Blocker b WHERE b.enabled = true")
   List<Blocker> findBlockers();
 
+  @Query("SELECT b FROM Blocker b WHERE b.type = 'FIXED'")
+  List<Blocker> getAllFixedBlockers();
+
   @Query("SELECT COUNT(b) FROM Blocker b WHERE b.type = 'CUSTOM' AND b.enabled = true")
   int countCustomBlockers();
 }
