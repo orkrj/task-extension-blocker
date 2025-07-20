@@ -21,7 +21,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
   private final RateLimitStorage storage;
 
-  private static final int RATE_LIMIT = 30;
+  private static final int RATE_LIMIT = 60;
   private static final String WHITE_LIST_IP = "127.0.0.1";
 
   @Override
